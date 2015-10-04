@@ -1,6 +1,6 @@
 {
   "name": "minutephp/autoresponder",
-  "description": "MinutePHP Plugin: autoresponder",
+  "description": "MinutePHP Plugin: Follow up e-mail autoresponder",
   "keywords": [
     "framework",
     "minutephp",

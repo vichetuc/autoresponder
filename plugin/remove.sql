@@ -1,1 +1,1 @@
-DELETE FROM events where (handler LIKE '%ArMenuHandler@%') LIMIT 100
+DELETE FROM events where (handler LIKE '%ArMenuHandler@%') OR (handler LIKE '%ArTodoHandler@%') LIMIT 100

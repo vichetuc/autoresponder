@@ -89,3 +89,4 @@ CREATE TABLE IF NOT EXISTS `ar_queue` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT IGNORE INTO `events` VALUES (NULL,'admin_menu_render','App\\EventHandler\\ArMenuHandler@menu',NULL,0,'Autoresponder menu in admin');
+INSERT IGNORE INTO `events` VALUES (NULL,'todo_admin','App\\EventHandler\\ArTodoHandler@todo',NULL,0,'List of todos for autoresponders');

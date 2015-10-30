@@ -194,9 +194,9 @@
             $sessionProvider.load(<?= $this->getSessionData() ?>);
         }])
         .controller('ngAppController', function ($scope, $minutephp, $timeout) {
-            $minutephp.import($scope, <?= $ar_campaign ?>);
-            $minutephp.import($scope, <?= $all_mails ?>);
-            $minutephp.import($scope, <?= $all_lists ?>);
+            $scope.extend(<?= $ar_campaign ?>);
+            $scope.extend(<?= $all_mails ?>);
+            $scope.extend(<?= $all_lists ?>);
 
             $scope.copy = [];
             $scope.allDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];

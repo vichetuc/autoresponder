@@ -129,9 +129,9 @@
             $sessionProvider.load(<?= $this->getSessionData() ?>);
         }])
         .controller('ngAppController', function ($scope, $minutephp, $notice) {
-            $minutephp.import($scope, <?= $ar_broadcasts ?>);
-            $minutephp.import($scope, <?= $all_lists ?>);
-            $minutephp.import($scope, <?= $all_mails ?>);
+            $scope.extend(<?= $ar_broadcasts ?>);
+            $scope.extend(<?= $all_lists ?>);
+            $scope.extend(<?= $all_mails ?>);
 
             $scope.init = function () {
                 $scope.broadcast = $scope.ar_broadcasts[0] || $scope.ar_broadcasts.create();

@@ -61,7 +61,7 @@
 <script>
     angular.module('ngApp', ['minutephp', 'angularTimeAgo', 'datatables'])
         .controller('ngAppController', function ($scope, $minutephp) {
-            $minutephp.import($scope, <?= $ar_campaigns ?>);
+            $scope.extend(<?= $ar_campaigns ?>);
 
             $scope.edit = function (id) {
                 if (!$(event.target).closest('td.unclickable').length) {

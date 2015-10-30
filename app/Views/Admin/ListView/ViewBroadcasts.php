@@ -56,7 +56,7 @@
             $sessionProvider.load(<?= $this->getSessionData() ?>);
         }])
         .controller('ngAppController', function ($scope, $minutephp) {
-            $minutephp.import($scope, <?= $broadcasts ?>);
+            $scope.extend(<?= $broadcasts ?>);
 
             $scope.edit = function (id) {
                 top.location.href = $scope.session.admin + '/autoresponder/broadcast/edit/' + id

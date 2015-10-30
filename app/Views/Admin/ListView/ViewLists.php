@@ -57,7 +57,7 @@
             $sessionProvider.load(<?= $this->getSessionData() ?>);
         }])
         .controller('ngAppController', function ($scope, $minutephp) {
-            $minutephp.import($scope, <?= $ar_lists ?>);
+            $scope.extend(<?= $ar_lists ?>);
 
             $scope.edit = function (id) {
                 top.location.href = $scope.session.admin + '/autoresponder/lists/edit/' + id;

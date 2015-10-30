@@ -116,7 +116,7 @@
             $sessionProvider.load(<?= $this->getSessionData() ?>);
         }])
         .controller('ngAppController', function ($scope, $minutephp, $timeout) {
-            $minutephp.import($scope, <?= $ar_lists ?>);
+            $scope.extend(<?= $ar_lists ?>);
 
             $scope.init = function () {
                 $scope.list = $scope.ar_lists[0] || $scope.ar_lists.create();

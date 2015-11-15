@@ -19,7 +19,13 @@ namespace Minute\Autoresponder {
     use Minute\Core\Singleton;
     use Minute\Mail\SendMail;
 
-    class Autoresponder {
+    class Autoresponder extends Singleton {
+        /**
+         * @return Autoresponder
+         */
+        public static function getInstance() {
+            return parent::getInstance();
+        }
 
         public function queueEmails() {
             Arcampaign::$has_many = [['messages', 'foreign_key' => 'ar_campaign_id', 'class_name' => 'ArMessage', 'order' => 'sequence asc']];

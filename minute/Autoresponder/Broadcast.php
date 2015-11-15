@@ -13,11 +13,18 @@ namespace Minute\Autoresponder {
     use Minute\App\App;
     use Minute\Core\Singleton;
 
-    class Broadcast {
+    class Broadcast extends Singleton {
         protected $app;
 
         function __construct() {
             $this->app = App::getInstance();
+        }
+
+        /**
+         * @return Broadcast
+         */
+        public static function getInstance() {
+            return parent::getInstance();
         }
 
         public function queueBroadcast() {

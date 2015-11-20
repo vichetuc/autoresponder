@@ -93,7 +93,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="mailing_time">Mailing time:</label>
+                                <label class="col-sm-2 control-label" for="mailing_time">Delivery time:</label>
 
                                 <div class="col-md-6 col-sm-12 col-lg-5">
                                     <div class="input-group">

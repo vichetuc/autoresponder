@@ -7,7 +7,6 @@
  */
 
 namespace Minute\Autoresponder {
-
     use ActiveRecord\Connection;
     use App\Models\ArCampaign;
     use App\Models\ArHistory;

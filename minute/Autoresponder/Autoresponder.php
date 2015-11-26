@@ -9,7 +9,7 @@
 namespace Minute\Autoresponder {
 
     use ActiveRecord\Connection;
-    use App\Models\Arcampaign;
+    use App\Models\ArCampaign;
     use App\Models\ArHistory;
     use App\Models\ArQueue;
     use App\Models\User;
@@ -28,9 +28,9 @@ namespace Minute\Autoresponder {
         }
 
         public function queueEmails() {
-            Arcampaign::$has_many = [['messages', 'foreign_key' => 'ar_campaign_id', 'class_name' => 'ArMessage', 'order' => 'sequence asc']];
+            ArCampaign::$has_many = [['messages', 'foreign_key' => 'ar_campaign_id', 'class_name' => 'ArMessage', 'order' => 'sequence asc']];
 
-            if ($autoresponders = Arcampaign::find_all_by_enabled('y')) {
+            if ($autoresponders = ArCampaign::find_all_by_enabled('y')) {
                 $lists       = Lists::getInstance();
                 $ext_mail_id = function ($msg) { return $msg->mail_id ?: 0; };
 

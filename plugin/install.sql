@@ -90,3 +90,4 @@ CREATE TABLE IF NOT EXISTS `ar_queue` (
 
 INSERT IGNORE INTO `events` VALUES (NULL,'admin_menu_render','App\\EventHandler\\ArMenuHandler@menu',NULL,0,'Autoresponder menu in admin');
 INSERT IGNORE INTO `events` VALUES (NULL,'todo_admin','App\\EventHandler\\ArTodoHandler@todo',NULL,0,'List of todos for autoresponders');
+INSERT IGNORE INTO `events` VALUES (NULL,'database_export','App\\EventHandler\\ArDbExportHandler@export',NULL,0,'Ignore ar_queue table when exporting database');

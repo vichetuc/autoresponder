@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `ar_queue` (
   PRIMARY KEY (`ar_queue_id`),
   UNIQUE KEY `user_id_mail_id` (`user_id`,`mail_id`),
   KEY `send_at` (`send_at`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT IGNORE INTO `events` VALUES (NULL,'admin_menu_render','App\\EventHandler\\ArMenuHandler@menu',NULL,0,'Autoresponder menu in admin');

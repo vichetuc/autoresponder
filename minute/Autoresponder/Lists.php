@@ -36,7 +36,7 @@ namespace Minute\Autoresponder {
                 if ($sqls = $list->sqls) {
                     foreach ($sqls as $sql) {
                         if ($sqlStatement = $sql->sql) {
-                            if ($users = User::find_by_sql($sqlStatement)) {
+                            if ($users = User::find_by_sql(strtolower($sqlStatement))) { //linux is case sensitive about tables names
                                 foreach ($users as $user) {
                                     if ($user_id = $user->user_id) {
                                         if ($sql->type === 'positive') {

@@ -8,7 +8,7 @@
 
 namespace Minute\Autoresponder {
 
-    use ActiveRecord\Model;
+    use ActiveRecord\Cache;
     use App\Models\ArList;
     use App\Models\User;
     use Minute\Core\Singleton;
@@ -36,7 +36,11 @@ namespace Minute\Autoresponder {
                 if ($sqls = $list->sqls) {
                     foreach ($sqls as $sql) {
                         if ($sqlStatement = $sql->sql) {
-                            if ($users = User::find_by_sql(strtolower($sqlStatement))) { //linux is case sensitive about tables names
+                            $users = Cache::get(md5($sqlStatement), function () use ($sqlStatement) {
+                                return User::find_by_sql(strtolower($sqlStatement)); //strtolower to make table name lowercase
+                            });
+
+                            if (!empty($users)) {
                                 foreach ($users as $user) {
                                     if ($user_id = $user->user_id) {
                                         if ($sql->type === 'positive') {

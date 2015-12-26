@@ -7,14 +7,17 @@
  */
 
 namespace Minute\Autoresponder {
+
     use ActiveRecord\Connection;
     use App\Models\ArCampaign;
     use App\Models\ArHistory;
     use App\Models\ArQueue;
     use App\Models\User;
+    use DateInterval;
     use DateTime;
     use DateTimeZone;
     use Exception;
+    use Minute\App\App;
     use Minute\Core\Singleton;
     use Minute\Mail\SendMail;
 
@@ -45,7 +48,8 @@ namespace Minute\Autoresponder {
                         }
 
                         if ($user_ids = $lists->getTargetUserIds($autoresponder->ar_list_id)) {
-                            printf("Sending mail to %d users..\n", count($user_ids));
+                            $count = 0;
+                            printf("Found %d users in list: $autoresponder->ar_list_id\n", count($user_ids));
 
                             $sql = sprintf('SELECT user_id, MAX(sent_at) AS last_sent, COUNT(user_id) AS total_sent FROM ar_history WHERE user_id IN (%s) AND mail_id IN (%s) ' .
                                            'GROUP BY user_id HAVING ((total_sent = %d) OR (last_sent > DATE_SUB(NOW(), INTERVAL 1 DAY)))', join(',', $user_ids), join(',', $mail_ids), count($messages));
@@ -73,35 +77,40 @@ namespace Minute\Autoresponder {
                                                 $wait_days = !empty($message_sent_ids) && !empty($mails[$mail_id_to_send]) ? $mails[$mail_id_to_send]->wait : 0;
 
                                                 if ($days_since_last_email >= $wait_days) {
-                                                    echo "Sending mail to $user_id: $mail_id_to_send\n";
                                                     $send_at = new DateTime();
 
                                                     if ($schedule = $autoresponder->schedule) {
                                                         if ($ranges = json_decode($schedule, true)) {
                                                             $user     = User::find_cached($user_id);
-                                                            $timezone = timezone_name_from_abbr("", $user->tz_offset * -60, 0);
-                                                            $send_at  = $this->getQueueDate($ranges, $timezone);
+                                                            $timezone = !empty($user->tz_offset) ? timezone_name_from_abbr("", $user->tz_offset * -60, 0) : date_default_timezone_get();
+                                                            $send_at  = $this->getQueueDate($ranges, $timezone) ?: $send_at;
                                                         }
                                                     }
 
-                                                    $now     = new DateTime();
                                                     $sent_at = $send_at->format(Connection::$datetime_format);
 
                                                     if (ArHistory::create_direct(['user_id' => $user_id, 'mail_id' => $mail_id_to_send, 'sent_at' => $sent_at])) {
+                                                        $now   = new DateTime();
+                                                        $count = $count + 1;
+
                                                         if ($send_at > $now) {
+                                                            echo "Queued mail_id #$mail_id_to_send for user_id #$user_id at $sent_at\n";
                                                             ArQueue::create_direct(['send_at' => $sent_at, 'user_id' => $user_id, 'mail_id' => $mail_id_to_send, 'status' => 'pending']);
                                                         } else {
+                                                            echo "Sending mail_id #$mail_id_to_send to user_id #$user_id right now\n";
                                                             SendMail::getInstance()->send($mail_id_to_send, $user_id);
                                                         }
                                                     }
                                                 }
                                             } catch (Exception $e) {
-                                                dd($e->getMessage());
+                                                App::getInstance()->warn("Unable to send mail: " . $e->getMessage());
                                             }
                                         }
                                     }
                                 }
                             }
+
+                            print "$count mails sent\n";
                         }
                     }
                 }
@@ -109,28 +118,31 @@ namespace Minute\Autoresponder {
         }
 
         public function getQueueDate($ranges, $timezone = '') {
-            for ($i = 0; $i < 168; $i++) {
-                $tz  = new DateTimeZone($timezone ?: 'America/Chicago');
-                $now = new DateTime ("now + $i hour", $tz);
+            $tz      = new DateTimeZone($timezone ?: (date_default_timezone_get() ?: 'America/Chicago'));
+            $now     = new DateTime ("now", $tz);
+            $current = function ($date) {
+                /** @var DateTime $date */
+                $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
-                foreach ($ranges as $range) {
-                    foreach ($range['days'] as $day_id => $day) {
-                        $start  = DateTime::createFromFormat('D H:i', sprintf('%s %s', $day, $range['start_time']), $tz);
-                        $finish = DateTime::createFromFormat('D H:i', sprintf('%s %s', $day, $range['end_time']), $tz);
+                return $date;
+            };
 
-                        if (($now >= $start) && ($now <= $finish)) {
-                            /** @var DateTime $date */
-                            $date = $i > 0 ? $start : $now;
+            foreach ($ranges as $range) {
+                foreach ($range['days'] as $day_id => $day) {
+                    $start  = DateTime::createFromFormat('D H:i', sprintf('%s %s', $day, $range['start_time']), $tz);
+                    $finish = DateTime::createFromFormat('D H:i', sprintf('%s %s', $day, $range['end_time']), $tz);
 
-                            $date->setTimezone(new DateTimeZone(ini_get('data.timezone') ?: 'America/Chicago'));
-
-                            return $date;
-                        }
+                    if (($now >= $start) && ($now <= $finish)) {
+                        return $current($now);
+                    } elseif ($start > $now) {
+                        $next = empty($next) ? $start : ($start < $next ? $start : $next);
+                    } elseif (empty($next)) {
+                        $next = $start->add(new DateInterval('P1W'));
                     }
                 }
             }
 
-            return false;
+            return !empty($next) ? $current($next) : false;
         }
     }
 }

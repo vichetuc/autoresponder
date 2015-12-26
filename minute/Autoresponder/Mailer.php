@@ -21,7 +21,7 @@ namespace Minute\Autoresponder {
         }
 
         public function sendPendingMails() {
-            if ($mails = ArQueue::find('all', ['conditions' => 'status="pending" and send_at < NOW()'])) {
+            if ($mails = ArQueue::find('all', ['conditions' => 'status = "pending" and send_at < NOW()'])) {
                 $sendMail = SendMail::getInstance();
 
                 foreach ($mails as $mail) {

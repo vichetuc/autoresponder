@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="pull-left">
-                    <h2><a href="..">Lists</a> &gt; {{list.name || 'Untitled list'}}</h2>
+                    <h2><a href="/admin/autoresponder/lists">Lists</a> &gt; {{list.name || 'Untitled list'}}</h2>
                 </div>
                 <div class="pull-right">
                     <a href="" minute-help="autoresponder/list" class="btn btn-default btn-xs"><i class="fa fa-check-circle"></i> Need help?</a>

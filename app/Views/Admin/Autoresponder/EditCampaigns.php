@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="pull-left">
-                    <h2><a href="..">Campaigns</a> &gt; {{campaign.name || 'Untitled'}}</h2>
+                    <h2><a href="/admin/autoresponder/campaigns">Campaigns</a> &gt; {{campaign.name || 'Untitled'}}</h2>
                 </div>
                 <div class="pull-right">
 

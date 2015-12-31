@@ -84,22 +84,39 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                     <h4 class="modal-title">Add new {{lastSQL.type}} SQL statement:</h4>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-warning alert-dismissible" role="alert" ng-if="lastSQL.type==='positive'">
-                        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <button type="button" class="close" data-dismiss="alert">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
                         <p>Positive SQL statement must return a list of <code>user_id</code> (to add to the mailing list).
                             The result should not contain any other column except <code>user_id</code>.</p>
                     </div>
                     <div class="alert alert-warning alert-dismissible" role="alert" ng-if="lastSQL.type==='negative'">
-                        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <button type="button" class="close" data-dismiss="alert">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
                         <p>Negative SQL statement must return a list of <code>user_id</code> which will be removed from the list of positive <code>user_id</code>. The result should not contain any
                             other column except <code>user_id</code>.</p>
                     </div>
 
-                    <div id="editor" ui-ace='{"mode": "mysql", useWrapMode : true}' ng-model="lastSQL.sql" class="ace-slim"></div>
+                    <form>
+                        <div class="form-group">
+                            <div id="editor" ui-ace='{"mode": "mysql", useWrapMode : true}' ng-model="lastSQL.sql" class="ace-slim"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Unique identifier for this SQL query (optional)" ng-model="lastSQL.name" />
+                        </div>
+                    </form>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -124,7 +141,11 @@
             };
 
             $scope.addSQL = function (type) {
-                var sql = $scope.list.sqls.create().set('type', type).set('sql', 'SELECT user_id from USERS WHERE user_id IN (SELECT user_id from user_levels WHERE level = "admin") LIMIT 1');
+                var samples = {
+                    'positive': 'SELECT user_id from USERS WHERE user_id IN (1, 2, 3)',
+                    'negative': "SELECT user_id from mail_unsubscribes where mail_type in ('tip', 'offer')"
+                };
+                var sql = $scope.list.sqls.create().set('type', type).set('sql', samples[type]);
                 $scope.editSQL(sql);
             };
 

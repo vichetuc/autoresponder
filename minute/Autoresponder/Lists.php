@@ -61,9 +61,7 @@ namespace Minute\Autoresponder {
 
         public function getTargetUsers($ar_list_id) {
             if ($user_ids = Lists::getInstance()->getTargetUserIds($ar_list_id)) {
-                $users = User::find($user_ids);
-
-                if (!empty($users)) {
+                if ($users = @User::find_all_by_user_id($user_ids)) {
                     return (is_array($users) ? $users : [$users]);
                 }
             }

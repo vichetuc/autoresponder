@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `ar_broadcasts` (
   `status` enum('pending','processing','sent') NOT NULL DEFAULT 'pending',
   PRIMARY KEY (`ar_broadcast_id`),
   KEY `status_send_at` (`status`,`send_at`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `ar_campaigns` (
   `enabled` enum('n','y') NOT NULL DEFAULT 'n',
   PRIMARY KEY (`ar_campaign_id`),
   KEY `ar_list_id` (`ar_list_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `ar_history` (
   PRIMARY KEY (`ar_history_id`),
   UNIQUE KEY `user_id_mail_id` (`user_id`,`mail_id`),
   KEY `user_id_mail_id_sent_at` (`user_id`,`mail_id`,`sent_at`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `ar_messages` (
   `wait` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`ar_message_id`),
   UNIQUE KEY `autoresponder_campaign_id_mail_id` (`ar_campaign_id`,`mail_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `ar_queue` (
   PRIMARY KEY (`ar_queue_id`),
   UNIQUE KEY `user_id_mail_id` (`user_id`,`mail_id`),
   KEY `status_send_at` (`status`,`send_at`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT IGNORE INTO `events` VALUES (NULL,'admin_menu_render','App\\EventHandler\\ArMenuHandler@menu',NULL,0,'Autoresponder menu in admin');

@@ -16,24 +16,5 @@ namespace App\Controllers\Admin {
         public function index($ar_campaigns) {
             View::forge('Admin/ListView/ViewCampaigns.php', $ar_campaigns);
         }
-
-        /**
-         * @param ActiveModel $Arcampaign
-         * @param string $cmd
-         */
-        public function save($Arcampaign, $cmd) {
-            if ($cmd == 'remove') {
-                $Arcampaign::$deletePermission = 'admin';
-
-                $result = $Arcampaign->delete_cascaded('ar_messages');
-            } else {
-                $Arcampaign::$updatePermission = 'admin';
-
-                $result = $Arcampaign->save();
-            }
-
-            HttpResponse::getInstance()->display($result, empty($result) ? 'Permission denied' : '');
-        }
-
     }
 }

@@ -1,7 +1,7 @@
 <script type="text/javascript" src="/static/bower_components/ace-builds/src-min-noconflict/ace.js"></script>
 <script type="text/javascript" src="/static/bower_components/angular-ui-ace/ui-ace.js"></script>
 
-<div ng-app="ngApp" ng-controller="ngAppController" ng-init="init()">
+<div ng-app="ngApp" ng-cloak="" ng-controller="ngAppController" ng-init="init()">
     <div class="title">
         <div class="row">
             <div class="col-md-12">

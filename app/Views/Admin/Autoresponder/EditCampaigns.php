@@ -1,4 +1,4 @@
-<div ng-app="ngApp" ng-controller="ngAppController" ng-init="init()">
+<div ng-app="ngApp" ng-cloak="" ng-controller="ngAppController" ng-init="init()">
     <div class="title">
         <div class="row">
             <div class="col-md-12">

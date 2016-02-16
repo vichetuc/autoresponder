@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `ar_history` (
   PRIMARY KEY (`ar_history_id`),
   UNIQUE KEY `user_id_mail_id` (`user_id`,`mail_id`),
   KEY `user_id_mail_id_sent_at` (`user_id`,`mail_id`,`sent_at`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -88,10 +88,10 @@ CREATE TABLE IF NOT EXISTS `ar_queue` (
   PRIMARY KEY (`ar_queue_id`),
   UNIQUE KEY `user_id_mail_id` (`user_id`,`mail_id`),
   KEY `status_send_at` (`status`,`send_at`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-INSERT IGNORE INTO `events` VALUES (NULL,'admin_menu_render','App\\EventHandler\\ArMenuHandler@menu',NULL,0,'Autoresponder menu in admin');
+INSERT IGNORE INTO `events` VALUES (NULL,'admin_menu_render','App\\EventHandler\\ArMenuHandler@admin',NULL,0,'Autoresponder menu in admin');
 INSERT IGNORE INTO `events` VALUES (NULL,'todo_admin','App\\EventHandler\\ArTodoHandler@todo',NULL,0,'List of todos for autoresponders');
 INSERT IGNORE INTO `events` VALUES (NULL,'database_export','App\\EventHandler\\ArDbExportHandler@export',NULL,0,'Ignore ar_queue table when exporting database');
 

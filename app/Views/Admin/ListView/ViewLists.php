@@ -1,4 +1,4 @@
-<div ng-app="ngApp" ng-controller="ngAppController" ng-init="init()">
+<div ng-app="ngApp" ng-cloak="" ng-controller="ngAppController" ng-init="init()">
     <div class="title">
         <div class="row">
             <div class="col-md-12">
@@ -6,7 +6,7 @@
                     <h2>Subscriber lists</h2>
                 </div>
                 <div class="pull-right">
-                    <button class="btn btn-lg btn-success" ng-click="edit(0)"><i class="fa fa-plus-circle"></i> Create new list</button>
+                    <a class="btn btn-default btn-success" href="" ng-href="{{edit(0)}}"><i class="fa fa-plus-circle"></i> New list</a>
                 </div>
             </div>
         </div>
@@ -14,57 +14,51 @@
 
     <div class="content">
         <div class="box">
-            <table datatable="ng" class="table row-border hover graylinks">
-                <thead>
-                <tr>
-                    <th>ID#</th>
-                    <th>Name</th>
-                    <th>Created</th>
-                    <th>SQL conditions</th>
-                    <th>&nbsp;</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="text-links" ng-repeat="ar_list in ar_lists" ng-click="edit(ar_list.getPKValue())">
-                    <td>{{ar_list.ar_list_id}}</td>
-                    <td>{{ar_list.name}}<small class="text-small text-muted" ng-if="!!ar_list.description"><br />{{ar_list.description}}</small></td>
-                    <td class="text-capitalize">{{ar_list.created_at | timeAgo}}</td>
-                    <td>{{ar_list.sqls.getTotalItems() || 'Not set'}}</td>
-                    <td class="unclickable">
-                        <div class="dropdown" ng-click="$event.stopPropagation();" onclick="$(this).find('.dropdown-menu').dropdown('toggle');">
-                            <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-xs btn-default">
-                                <i class="fa fa-cog"></i>
+            <div angular-minute-search="ar_lists" title="Subscriber target lists" placeholder="Search Subscriber target lists.."></div>
+
+            <table class="table table-striped graylinks" angular-minute-table="">
+                <tr ng-repeat="ar_list in ar_lists" ng-link="{{edit(ar_list.getPKValue())}}">
+                    <td ng-field="ar_list_id" ng-title="Id">{{ar_list.ar_list_id}}</td>
+                    <td ng-field="name">{{ar_list.name}}</td>
+                    <td ng-field="created_at">{{ar_list.created_at | timeAgo}}</td>
+                    <td ng-title="Messages">{{ar_list.sqls.getTotalItems() || 'Not set'}}</td>
+
+                    <td>
+                        <div class="btn-group">
+                            <a href="" ng-href="{{edit(ar_list.getPKValue())}}" class="btn btn-default btn-xs">Edit..</a>
+                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
                                 <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dLabel">
-                                <li><a href="#" ng-click="download(ar_list.getPKValue())"><i class="fa fa-download"></i> Export list to CSV</a></li>
+                            <ul class="dropdown-menu">
+                                <li><a href="" ng-href="{{download(ar_list.getPKValue())}}"><i class="fa fa-download"></i> Export list to CSV</a></li>
                                 <li class="divider"></li>
-                                <li><a href="#" ng-click="ar_list.removeConfirm()"><i class="fa fa-trash"></i> Delete</a></li>
+                                <li><a href="" ng-click="ar_list.removeConfirm('Are you sure?', 'Item removed')"><i class="fa fa-trash"></i> Remove..</a></li>
                             </ul>
                         </div>
                     </td>
                 </tr>
-                </tbody>
             </table>
+
+            <div angular-minute-pager="ar_lists"></div>
 
         </div>
     </div>
 </div>
 
 <script>
-    angular.module('ngApp', ['minutephp', 'angularTimeAgo', 'datatables'])
+    angular.module('ngApp', ['minutephp', 'angularMinuteTable', 'angularMinuteSearch', 'angularMinutePager'])
         .config(['$sessionProvider', function ($sessionProvider) {
             $sessionProvider.load(<?= $this->getSessionData() ?>);
         }])
         .controller('ngAppController', function ($scope, $minutephp) {
-            $scope.extend(<?= $ar_lists ?>);
+            $scope.extend(__ar_lists__);
 
             $scope.edit = function (id) {
-                top.location.href = $scope.session.admin + '/autoresponder/lists/edit/' + id;
+                return '/admin/autoresponder/lists/edit/' + id;
             };
 
             $scope.download = function (id) {
-                top.location.href = $scope.session.admin + '/autoresponder/lists/download/' + id;
+                return '/admin/autoresponder/lists/download/' + id;
             };
         });
 </script>

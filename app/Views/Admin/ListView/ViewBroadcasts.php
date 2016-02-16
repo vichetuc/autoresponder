@@ -1,12 +1,12 @@
-<div ng-app="ngApp" ng-controller="ngAppController" ng-init="init()">
+<div ng-app="ngApp" ng-cloak="" ng-controller="ngAppController" ng-init="init()">
     <div class="title">
         <div class="row">
             <div class="col-md-12">
                 <div class="pull-left">
-                    <h2>All Broadcasts</h2>
+                    <h2>E-mail Broadcasts</h2>
                 </div>
                 <div class="pull-right">
-                    <button class="btn btn-lg btn-success" ng-click="edit(0)"><i class="fa fa-plus-circle"></i> New broadcast</button>
+                    <a class="btn btn-default btn-success" href="" ng-href="{{edit(0)}}"><i class="fa fa-plus-circle"></i> New broadcast</a>
                 </div>
             </div>
         </div>
@@ -14,52 +14,43 @@
 
     <div class="content">
         <div class="box">
-            <table datatable="ng" class="table row-border hover graylinks">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Send date</th>
-                    <th>List</th>
-                    <th>Mail</th>
-                    <th>Status</th>
-                    <th>&nbsp;</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="text-links" ng-repeat="broadcast in broadcasts" ng-click="edit(broadcast.getPKValue())">
-                    <td>{{broadcast.ar_broadcast_id}}</td>
-                    <td data-order="{{broadcast.send_at}}">{{broadcast.send_at | timeAgo}}</td>
-                    <td>{{broadcast.list.description || broadcast.list.name}}</td>
-                    <td>{{broadcast.mail.description || broadcast.mail.name}}</td>
-                    <td>{{broadcast.status | ucfirst}}</td>
-                    <td class="unclickable">
-                        <div class="dropdown" ng-click="$event.stopPropagation();" onclick="$(this).find('.dropdown-menu').dropdown('toggle');">
-                            <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-xs btn-default">
-                                <i class="fa fa-cog"></i>
+            <div angular-minute-search="broadcasts" title="Broadcast list" placeholder="Search Broadcast list.."></div>
+
+            <table class="table table-striped graylinks" angular-minute-table="">
+                <tr ng-repeat="broadcast in broadcasts" ng-link="{{edit(broadcast.getPKValue())}}">
+                    <td ng-field="ar_broadcast_id" ng-title="Id">{{broadcast.ar_broadcast_id}}</td>
+                    <td ng-field="send_at" ng-title="">{{broadcast.send_at | timeAgo}}</td>
+                    <td ng-field="list.description" ng-title="List">{{broadcast.list.description}}</td>
+                    <td ng-field="mail.description" ng-title="Mail">{{broadcast.mail.description}}</td>
+                    <td ng-field="status" ng-title="">{{broadcast.status}}</td>
+
+                    <td>
+                        <div class="btn-group">
+                            <a href="" ng-href="{{edit(broadcast.getPKValue())}}" class="btn btn-default btn-xs">Edit..</a>
+                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
                                 <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dLabel">
-                                <li><a href="#" ng-click="broadcast.removeConfirm('Removed')"><i class="fa fa-trash"></i> Delete</a></li>
+                            <ul class="dropdown-menu">
+                                <li><a href="" ng-click="broadcast.removeConfirm('Are you sure?', 'Removed')"><i class="fa fa-trash"></i> Remove..</a></li>
                             </ul>
                         </div>
                     </td>
                 </tr>
-                </tbody>
             </table>
+
+            <div angular-minute-pager="broadcasts"></div>
+
         </div>
     </div>
 </div>
 
 <script>
-    angular.module('ngApp', ['minutephp', 'angularStringFilters', 'angularTimeAgo', 'datatables'])
-        .config(['$sessionProvider', function ($sessionProvider) {
-            $sessionProvider.load(<?= $this->getSessionData() ?>);
-        }])
+    angular.module('ngApp', ['minutephp', 'angularMinuteTable', 'angularMinuteSearch', 'angularMinutePager'])
         .controller('ngAppController', function ($scope, $minutephp) {
-            $scope.extend(<?= $broadcasts ?>);
+            $scope.extend(__broadcasts__);
 
             $scope.edit = function (id) {
-                top.location.href = $scope.session.admin + '/autoresponder/broadcast/edit/' + id
+                return '/admin/autoresponder/broadcast/edit/' + id;
             };
         });
 </script>
